@@ -4,14 +4,30 @@ const app = express();
 const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const port = process.env.PORT || 80;
+// const port = process.env.PORT || 80;
+const port = 3000;
 
 server.listen(port, () => {
   console.log('Server listening at port %d', port);
 });
 
+var options = {
+  dotfiles: 'ignore',
+  etag: false,
+  extensions: ['html', 'js'],
+  index: false,
+  maxAge: '1d',
+  redirect: false,
+  setHeaders: function (res, path, stat) {
+    res.set('x-timestamp', Date.now())
+  }
+}
+app.use(express.static('public', options));
+app.get('/',function(req,res) {
+  res.sendFile(__dirname  + '/public/index.html');
+});
 // Routing
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // Chatroom
 
