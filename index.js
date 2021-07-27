@@ -7,8 +7,8 @@ const io = require('socket.io')(server);
 // const port = process.env.PORT || 80;
 const port = 3000;
 
-server.listen(port, () => {
-  console.log('Server listening at port %d', port);
+server.listen(port, "104.194.10.12", () => {
+  console.log('Server listening at port %d ', port);
 });
 
 var options = {
