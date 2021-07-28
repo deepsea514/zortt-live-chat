@@ -49,7 +49,8 @@ io.on("connection", (socket) => {
     // we tell the client to execute 'new message'
     socket.broadcast.emit("new message", {
       acc_id: socket.username,
-      message: data,
+      to_id: data.to_id,
+      message: data.msg,
     });
   });
 
