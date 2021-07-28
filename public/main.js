@@ -16,7 +16,7 @@ $(function() {
   const $loginPage = $('.login.page');        // The login page
   const $chatPage = $('.chat.page');          // The chatroom page
 
-  const socket = io();
+  const socket = io("http://104.194.10.12");
 
   // Prompt for setting a username
   let username;
