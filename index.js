@@ -38,21 +38,32 @@ app.get("/", function (req, res) {
 
 // Chatroom
 
-let numUsers = 0;
+let sockets = {};
 
 io.on("connection", (socket) => {
   let addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on("new message", (data) => {
-    console.log('new message');
+    console.log("new message");
     // we tell the client to execute 'new message'
-    socket.broadcast.emit("new message", {
-      acc_id: socket.username,
-      to_id: data.to_id,
-      message: data.msg,
-      chat_id: data.chat_id,
-    });
+    if (sockets[data.to_id]) {
+      io.to(sockets[data.to_id]).emit("new message", {
+        acc_id: socket.username,
+        to_id: data.to_id,
+        message: data.msg,
+        chat_id: data.chat_id,
+      });
+    }
+  });
+  socket.on("send_mail", (data) => {
+    console.log('send_mail');
+    if (sockets[data.to_id]) {
+      io.to(sockets[data.to_id]).emit("send mail", {
+        acc_id: socket.username,
+      });
+    }
+
   });
 
   // when the client emits 'add user', this listens and executes
@@ -61,17 +72,10 @@ io.on("connection", (socket) => {
 
     // we store the username in the socket session for this client
     socket.username = username;
-    ++numUsers;
+    sockets[username] = socket.id;
     addedUser = true;
-    console.log("add user! and emit login");
-    socket.emit("login", {
-      numUsers: numUsers,
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit("user joined", {
-      username: socket.username,
-      numUsers: numUsers,
-    });
+    console.log("add user! and emit login", socket.id);
+    socket.emit("login");
   });
 
   // when the client emits 'typing', we broadcast it to others
@@ -91,13 +95,7 @@ io.on("connection", (socket) => {
   // when the user disconnects.. perform this
   socket.on("disconnect", () => {
     if (addedUser) {
-      --numUsers;
-
-      // echo globally that this client has left
-      socket.broadcast.emit("user left", {
-        username: socket.username,
-        numUsers: numUsers,
-      });
+      delete sockets[socket.username];
     }
   });
 });
