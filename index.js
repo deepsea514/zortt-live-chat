@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
     console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("send_mail", {
-        acc_id: socket.username,
+        mail_id: data.mail_id,
       });
     }
 
