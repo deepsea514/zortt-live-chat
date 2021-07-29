@@ -51,6 +51,7 @@ io.on("connection", (socket) => {
       acc_id: socket.username,
       to_id: data.to_id,
       message: data.msg,
+      chat_id: data.chat_id,
     });
   });
 
