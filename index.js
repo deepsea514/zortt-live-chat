@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
   // when the client emits 'new message', this listens and executes
   socket.on("new message", (data) => {
-    console.log("new message");
+    console.log("new message", data, sockets);
     // we tell the client to execute 'new message'
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("new message", {
@@ -57,9 +57,9 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("send_mail", (data) => {
-    console.log('send_mail');
+    console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
-      io.to(sockets[data.to_id]).emit("send mail", {
+      io.to(sockets[data.to_id]).emit("send_mail", {
         acc_id: socket.username,
       });
     }
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
     socket.username = username;
     sockets[username] = socket.id;
     addedUser = true;
-    console.log("add user! and emit login", socket.id);
+    console.log("add user! and emit login", username, socket.id);
     socket.emit("login");
   });
 
