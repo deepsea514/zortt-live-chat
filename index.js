@@ -66,6 +66,18 @@ io.on("connection", (socket) => {
       })
     }
   });
+  socket.on('exit channel', (data) => {
+    console.log('exit channel', data,sockets);
+    if (Array.isArray(data.attendees)) {
+      data.attendees.map(function(one) {
+        if (one == socket.username) return;
+        io.to(sockets[one]).emit('exit channel', {
+          channel_id: data.channel_id,
+          acc_id: socket.username
+        })
+      })
+    }
+  });
   socket.on("send_mail", (data) => {
     console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
