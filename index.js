@@ -58,6 +58,14 @@ io.on("connection", (socket) => {
       });
     }
   });
+  socket.on('new channel', (data) => {
+    console.log('new channel', data,sockets);
+    if (Array.isArray(data.people)) {
+      data.people.map(function(one) {
+        io.to(sockets[one]).emit('new channel', data)
+      })
+    }
+  });
   socket.on("send_mail", (data) => {
     console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
