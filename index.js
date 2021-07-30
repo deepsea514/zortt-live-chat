@@ -53,6 +53,8 @@ io.on("connection", (socket) => {
         to_id: data.to_id,
         message: data.msg,
         chat_id: data.chat_id,
+        channel_id: data.channel_id,
+        mode: data.mode,
       });
     }
   });
@@ -60,6 +62,7 @@ io.on("connection", (socket) => {
     console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("send_mail", {
+        to_id: data.to_id,
         mail_id: data.mail_id,
         from: data.from,
         subject: data.subject,
