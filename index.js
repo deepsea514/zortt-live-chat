@@ -61,6 +61,8 @@ io.on("connection", (socket) => {
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("send_mail", {
         mail_id: data.mail_id,
+        from: data.from,
+        subject: data.subject,
       });
     }
 
