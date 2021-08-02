@@ -58,36 +58,51 @@ io.on("connection", (socket) => {
       });
     }
   });
-  socket.on('new channel', (data) => {
-    console.log('new channel', data,sockets);
+  socket.on("new channel", (data) => {
+    console.log("new channel", data, sockets);
     if (Array.isArray(data.people)) {
-      data.people.map(function(one) {
-        io.to(sockets[one]).emit('new channel', data)
-      })
+      data.people.map(function (one) {
+        io.to(sockets[one]).emit("new channel", data);
+      });
     }
   });
-  socket.on('exit channel', (data) => {
-    console.log('exit channel', data,sockets);
+  socket.on("exit channel", (data) => {
+    console.log("exit channel", data, sockets);
     if (Array.isArray(data.attendees)) {
-      data.attendees.map(function(one) {
+      data.attendees.map(function (one) {
         if (one == socket.acc.id) return;
-        io.to(sockets[one]).emit('exit channel', {
+        io.to(sockets[one]).emit("exit channel", {
           channel_id: data.channel_id,
-          acc_id: socket.acc.id
-        })
-      })
+          acc_id: socket.acc.id,
+        });
+      });
     }
   });
 
-  socket.on('request call', (data) => {
-    console.log(`request call from ${socket.acc.id} on ${new Date()}`, data, sockets);
-    io.to(sockets[data.to_id]).emit('request call', {
-      from: socket.acc
-    })
-  })
+  socket.on("request call", (data) => {
+    console.log(
+      `request call from ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(sockets[data.to_id]).emit("request call", {
+      from: socket.acc,
+    });
+  });
+
+  socket.on("request call accepted", (data) => {
+    console.log(
+      `request call from ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(sockets[data.to_id]).emit("request call accepted", {
+      from: socket.acc,
+    });
+  });
 
   socket.on("send_mail", (data) => {
-    console.log('send_mail', data, sockets);
+    console.log("send_mail", data, sockets);
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("send_mail", {
         to_id: data.to_id,
@@ -96,7 +111,6 @@ io.on("connection", (socket) => {
         subject: data.subject,
       });
     }
-
   });
 
   // when the client emits 'add user', this listens and executes
