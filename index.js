@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
     // we tell the client to execute 'new message'
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("new message", {
-        acc_id: socket.username,
+        acc_id: socket.acc_id,
         to_id: data.to_id,
         message: data.msg,
         chat_id: data.chat_id,
@@ -70,14 +70,22 @@ io.on("connection", (socket) => {
     console.log('exit channel', data,sockets);
     if (Array.isArray(data.attendees)) {
       data.attendees.map(function(one) {
-        if (one == socket.username) return;
+        if (one == socket.acc_id) return;
         io.to(sockets[one]).emit('exit channel', {
           channel_id: data.channel_id,
-          acc_id: socket.username
+          acc_id: socket.acc_id
         })
       })
     }
   });
+
+  socket.on('request call', (data) => {
+    console.log(`request call from ${socket.acc_id} on ${new Date()}`, data, sockets);
+    io.to(sockets[data.to_id]).emit('request call', {
+      from_id: socket.acc_id
+    })
+  })
+
   socket.on("send_mail", (data) => {
     console.log('send_mail', data, sockets);
     if (sockets[data.to_id]) {
@@ -92,35 +100,35 @@ io.on("connection", (socket) => {
   });
 
   // when the client emits 'add user', this listens and executes
-  socket.on("add user", (username) => {
+  socket.on("add user", (acc_id) => {
     if (addedUser) return;
 
-    // we store the username in the socket session for this client
-    socket.username = username;
-    sockets[username] = socket.id;
+    // we store the acc_id in the socket session for this client
+    socket.acc_id = acc_id;
+    sockets[acc_id] = socket.id;
     addedUser = true;
-    console.log("add user! and emit login", username, socket.id);
+    console.log("add user! and emit login", acc_id, socket.id);
     socket.emit("login");
   });
 
   // when the client emits 'typing', we broadcast it to others
   socket.on("typing", () => {
     socket.broadcast.emit("typing", {
-      username: socket.username,
+      acc_id: socket.acc_id,
     });
   });
 
   // when the client emits 'stop typing', we broadcast it to others
   socket.on("stop typing", () => {
     socket.broadcast.emit("stop typing", {
-      username: socket.username,
+      acc_id: socket.acc_id,
     });
   });
 
   // when the user disconnects.. perform this
   socket.on("disconnect", () => {
     if (addedUser) {
-      delete sockets[socket.username];
+      delete sockets[socket.acc_id];
     }
   });
 });
