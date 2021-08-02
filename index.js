@@ -101,6 +101,27 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on('webrtc created', (data) => {
+    console.log(
+      `webrtc created from ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(data.to_id).emit('webrtc created', {
+      sdp: data.sdp});
+  })
+  socket.on('webrtc joined', (data) => {
+    console.log(
+      `webrtc joined from ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(data.to_id).emit('webrtc joined', {
+      sdp: data.sdp});
+  })
+
+
+
   socket.on("send_mail", (data) => {
     console.log("send_mail", data, sockets);
     if (sockets[data.to_id]) {
