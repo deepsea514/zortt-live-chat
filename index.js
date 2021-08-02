@@ -120,6 +120,11 @@ io.on("connection", (socket) => {
       sdp: data.sdp});
   })
 
+  socket.on('webrtc ice candidate', (data) => {
+    console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${data.roomId}`)
+    io.to(sockets[data.to_id]).emit('webrtc ice candidate', data);
+  })
+
 
 
   socket.on("send_mail", (data) => {
