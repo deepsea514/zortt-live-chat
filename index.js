@@ -107,7 +107,7 @@ io.on("connection", (socket) => {
       data,
       sockets
     );
-    io.to(data.to_id).emit('webrtc created', {
+    io.to(sockets[data.to_id]).emit('webrtc created', {
       sdp: data.sdp});
   })
   socket.on('webrtc joined', (data) => {
@@ -116,7 +116,7 @@ io.on("connection", (socket) => {
       data,
       sockets
     );
-    io.to(data.to_id).emit('webrtc joined', {
+    io.to(sockets[data.to_id]).emit('webrtc joined', {
       sdp: data.sdp});
   })
 
