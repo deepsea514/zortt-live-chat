@@ -100,6 +100,16 @@ io.on("connection", (socket) => {
       from: socket.acc,
     });
   });
+  socket.on("request call rejected", (data) => {
+    console.log(
+      `request call rejected ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(sockets[data.to_id]).emit("request call rejected", {
+      from: socket.acc,
+    });
+  });
 
   socket.on('webrtc created', (data) => {
     console.log(
