@@ -100,6 +100,16 @@ io.on("connection", (socket) => {
       from: socket.acc,
     });
   });
+  socket.on("request call cancelled", (data) => {
+    console.log(
+      `request call cancelled from ${socket.acc.id} on ${new Date()}`,
+      data,
+      sockets
+    );
+    io.to(sockets[data.to_id]).emit("request call cancelled", {
+      from: socket.acc,
+    });
+  });
   socket.on("request call rejected", (data) => {
     console.log(
       `request call rejected ${socket.acc.id} on ${new Date()}`,
