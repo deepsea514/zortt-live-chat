@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("new message", {
         acc_id: socket.acc.id,
+        from: socket.acc,
         to_id: data.to_id,
         message: data.msg,
         chat_id: data.chat_id,
