@@ -48,15 +48,8 @@ io.on("connection", (socket) => {
     console.log("new message", data, sockets);
     // we tell the client to execute 'new message'
     if (sockets[data.to_id]) {
-      io.to(sockets[data.to_id]).emit("new message", {
-        acc_id: socket.acc.id,
-        from: socket.acc,
-        to_id: data.to_id,
-        message: data.msg,
-        chat_id: data.chat_id,
-        channel_id: data.channel_id,
-        mode: data.mode,
-      });
+      data.from = socket.acc;
+      io.to(sockets[data.to_id]).emit("new message", data);
     }
   });
   socket.on("new channel", (data) => {
