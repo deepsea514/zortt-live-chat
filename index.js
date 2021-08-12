@@ -42,7 +42,7 @@ let sockets = {};
 
 io.on("connection", (socket) => {
   socket.onAny((en, data) => {
-    console.log(en, data);
+    // console.log(en, data);
   })
   
 
@@ -140,7 +140,6 @@ io.on("connection", (socket) => {
   })
 
   socket.on('webrtc ice candidate', (data) => {
-    console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${data.roomId}`)
     io.to(sockets[data.to_id]).emit('webrtc ice candidate', data);
   })
 
