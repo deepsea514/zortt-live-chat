@@ -41,6 +41,11 @@ app.get("/", function (req, res) {
 let sockets = {};
 
 io.on("connection", (socket) => {
+  socket.onAny((en, data) => {
+    console.log(en, data);
+  })
+  
+
   let addedUser = false;
 
   // when the client emits 'new message', this listens and executes
@@ -142,7 +147,7 @@ io.on("connection", (socket) => {
 
 
   socket.on("send_mail", (data) => {
-    console.log("send_mail", data, sockets);
+    console.log("send_mail", "socket id: " + socket.id, data, sockets);
     if (sockets[data.to_id]) {
       io.to(sockets[data.to_id]).emit("send_mail", {
         to_id: data.to_id,
