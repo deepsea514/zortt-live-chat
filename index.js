@@ -190,6 +190,7 @@ io.on("connection", (socket) => {
     if (addedUser) {
       console.log('DISCONNECTED ! ------  -_-', socket.acc.id, sockets)
       delete sockets[socket.acc.id];
+      addedUser = false;
     }
   });
 });
