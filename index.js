@@ -186,8 +186,8 @@ io.on("connection", (socket) => {
 
   // when the user disconnects.. perform this
   socket.on("disconnect", () => {
-    console.log('DISCONNECTED ! ------  -_-', socket.acc.id, sockets)
     if (addedUser) {
+      console.log('DISCONNECTED ! ------  -_-', socket.acc.id, sockets)
       delete sockets[socket.acc.id];
     }
   });
