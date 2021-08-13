@@ -11,7 +11,7 @@ const io = require("socket.io")(server, {
 const port = process.env.PORT || 3000;
 // const port = 3000;
 
-server.listen(port, "0.0.0.0", () => {
+server.listen(port, "127.0.0.1", () => {
   console.log("Server listening at port %d ", port);
 });
 // server.listen(port, "104.194.10.12", () => {
